@@ -216,7 +216,7 @@ netstar_checksum_add(const void *packet, uint16_t packet_length) {
   return sum;
 }
 
-static size_t /* uint16_t */
+static size_t
 network_ipaddr_checksum(const void *buffer, uint16_t *packet, uint16_t packet_length) {
   struct netstar_iphdr *iph = (struct netstar_iphdr *)buffer;
   struct netstar_ipv6hdr *ipv6h = (struct netstar_ipv6hdr *)buffer;
@@ -241,7 +241,6 @@ network_ipaddr_checksum(const void *buffer, uint16_t *packet, uint16_t packet_le
       sum += netstar_checksum_add((uint16_t *)&iph->daddr, NETWORK_IPADDR4_SIZE);
 
       sum += iph->protocol;
-   // sum += payload_length; // @ check payload_length include
       sum += packet_length;
 
       break;
