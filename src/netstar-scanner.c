@@ -15,7 +15,10 @@
 
 static bool netstar_scanner_initialized, netstar_scanner_started;
 
+static netstar_thread_t *netstar_scanner_hosts4_send_thread;
 netstar_hosts_t netstar_scanner_scanned_hosts4;
+
+static netstar_thread_t *netstar_scanner_hosts6_send_thread;
 netstar_hosts_t netstar_scanner_scanned_hosts6;
 
 
@@ -50,10 +53,6 @@ netstar_scanner_hosts4_recv(netstar_t *netstar, struct netstar_capture_packet *p
   }
 }
 
-
-static netstar_thread_t *netstar_scanner_hosts4_send_thread;
-
-
 static void *
 netstar_scanner_hosts4_send(void *context) {
   netstar_thread_t *thread = (netstar_thread_t *)context;
@@ -63,7 +62,16 @@ netstar_scanner_hosts4_send(void *context) {
   netstar_timer_t timer = NETSTAR_TIMER_INITIALIZER;
 
   if (network_ipaddr4_isclassa(&scanner->hosts4.range.begin) && ntohl(scanner->hosts4.range.end.u32)-ntohl(scanner->hosts4.range.begin.u32) >= 6048) // !network_ipaddr4_compare(&netstar->managed.iface->network, &scanner->hosts4.range.begin) && !network_ipaddr4_compare(&netstar->managed.iface->broadcast, &scanner->hosts4.range.end))
-    netstar_warning("\b \b[ scanner@hosts4 ] network class A - %u hosts; consider using a range or a more specific CIDR block to avoid unnecessarily large address spaces\r\n", ntohl(scanner->hosts4.range.end.u32)-ntohl(scanner->hosts4.range.begin.u32));
+    netstar_warning("\b \b[ scanner@hosts4 ]: network class A - %u hosts; consider using a range or a more specific CIDR block to avoid unnecessarily large address spaces\r\n", ntohl(scanner->hosts4.range.end.u32)-ntohl(scanner->hosts4.range.begin.u32));
+
+  {
+    char begin_addr[NETWORK_IPADDR4_STRLENGTH] = {0}, end_addr[NETWORK_IPADDR4_STRLENGTH] = {0};
+
+    netstar_log("\b \b[ scanner@hosts4 ]: scan-range: %s - %s; scan-interval: %" PRIu32 "s\r\n",
+      network_ipaddr4_format(&scanner->hosts4.range.begin, begin_addr, sizeof(begin_addr)),
+      network_ipaddr4_format(&scanner->hosts4.range.end, end_addr, sizeof(end_addr)),
+      netstar_time_millisecstosecs(scanner->hosts4.time_interval));
+  }
 
   for (; thread->status;) {
     netstar_time_t remaining_time = netstar_timer(&timer);
@@ -88,13 +96,13 @@ netstar_scanner_hosts4_send(void *context) {
         netstar_time_sleep(20);
       }
 
-      netstar_timer_start(&timer, netstar_time_millisecstosecs(scanner->hosts4.time));
+      netstar_timer_start(&timer, netstar_time_millisecstosecs(scanner->hosts4.time_interval));
     }
 
     if (!thread->status)
       break;
 
-    netstar_thread_sleep(thread, 4);
+    netstar_time_sleep(netstar_time_secstomillisecs(1));
   }
 
   netstar_thread_exit(thread, NULL);
@@ -132,10 +140,6 @@ netstar_scanner_hosts6_recv(netstar_t *netstar, struct netstar_capture_packet *p
   }
 }
 
-
-static netstar_thread_t *netstar_scanner_hosts6_send_thread;
-
-
 static void *
 netstar_scanner_hosts6_send(void *context) {
   netstar_thread_t *thread = (netstar_thread_t *)context;
@@ -144,17 +148,25 @@ netstar_scanner_hosts6_send(void *context) {
 
   netstar_timer_t timer = NETSTAR_TIMER_INITIALIZER;
 
+  {
+    char begin_addr[NETWORK_IPADDR6_STRLENGTH] = {0}, end_addr[NETWORK_IPADDR6_STRLENGTH] = {0};
+
+    netstar_log("\b \b[ scanner@hosts6 ]: scan-range: %s - %s; scan-interval: %" PRIu32 "s\r\n",
+      network_ipaddr6_format(&scanner->hosts6.range.begin, begin_addr, sizeof(begin_addr)),
+      network_ipaddr6_format(&scanner->hosts6.range.end, end_addr, sizeof(end_addr)),
+      netstar_time_millisecstosecs(scanner->hosts6.time_interval));
+  }
+
   for (; thread->status;) {
     netstar_time_t remaining_time = netstar_timer(&timer);
 
     if (!remaining_time) {
       netstar_sendicmpv6echo(&netstar->managed, &netstar->managed.iface->mac, &MACIEEE802_V6ALLNODES, NETSTAR_ICMPV6_TYPE_ECHO, &netstar->managed.iface->addr6, &NETWORK_IPADDR6_ALLNODES);
 
-      netstar_timer_start(&timer, netstar_time_millisecstosecs(scanner->hosts6.time));
+      netstar_timer_start(&timer, netstar_time_millisecstosecs(scanner->hosts6.time_interval));
     }
 
-    netstar_thread_sleep(thread, 4);
- // netstar_time_sleep(netstar_time_secstomillisecs(1));
+    netstar_time_sleep(netstar_time_secstomillisecs(2));
   }
 
   netstar_thread_exit(thread, NULL);
@@ -166,8 +178,8 @@ netstar_scanner_new(struct netstar_scanner *scanner, netstar_t *netstar) {
   if (!(scanner->preexcluded_hosts = netstar_hosts_new()))
     goto _return;
 
-  scanner->hosts4.time = netstar_time_minutestomillisecs(4);
-  scanner->hosts6.time = netstar_time_minutestomillisecs(6);
+  scanner->hosts4.time_interval = netstar_time_minutestomillisecs(4);
+  scanner->hosts6.time_interval = netstar_time_minutestomillisecs(6);
 
   scanner->netstar = netstar;
 

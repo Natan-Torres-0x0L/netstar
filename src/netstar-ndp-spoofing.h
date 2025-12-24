@@ -14,18 +14,18 @@ extern "C" {
 
 
 struct netstar_ndp_network_spoofing {
+  netstar_hosts_t protected_hosts, spoofed_hosts;
+  bool bidirectional;
+
   netstar_host_t redirection_host;
   bool redirective;
 
-  netstar_hosts_t protected_hosts,
-                  spoofed_hosts;
+  netstar_time_t network_scan_interval;
 
-  bool bidirectional;
+  netstar_time_t spoof_burst_interval;
+  size_t spoof_burst_count;
 
-  netstar_time_t shockwave_time;
-  size_t shockwaves;
-
-  netstar_time_t persistent_time;
+  netstar_time_t spoof_steady_interval;
 
   netstar_thread_t *thread;
 
@@ -38,18 +38,16 @@ extern void netstar_ndp_network_spoofing_free(struct netstar_ndp_network_spoofin
 
 
 struct netstar_ndp_spoofing {
+  netstar_hosts_t spoofed_hosts, target_hosts;
+  bool bidirectional;
+
   netstar_host_t redirection_host;
   bool redirective;
 
-  netstar_hosts_t spoofed_hosts,
-                  target_hosts;
+  netstar_time_t spoof_burst_interval;
+  size_t spoof_burst_count;
 
-  bool bidirectional;
-
-  netstar_time_t shockwave_time;
-  size_t shockwaves;
-
-  netstar_time_t persistent_time;
+  netstar_time_t spoof_steady_interval;
 
   netstar_thread_t *thread;
 

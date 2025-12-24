@@ -23,9 +23,9 @@
 
 
 static struct console_args_command netstar_arp_broadcast_spoofing_commands[] = {
-  { .name = "netstar:arp:broadcast-spoofing:persistent-time", .flags = "--persistent-time", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:arp:broadcast-spoofing:sshockwave-time", .flags = "--shockwave-time", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:arp:broadcast-spoofing:shockwaves", .flags = "--shockwaves", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:arp:broadcast-spoofing:spoof-steady-interval", .flags = "--spoof-steady-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:arp:broadcast-spoofing:spoof-burst-interval", .flags = "--spoof-burst-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:arp:broadcast-spoofing:spoof-burst-count", .flags = "--spoof-burst-count", .sensitive = true, .required = false, .required_values = 1, },
 };
 static struct console_args_command netstar_arp_broadcast_spoofing_command = {
   .name = "netstar:arp:broadcast-spoofing", .flags = "--broadcast-spoofing", .sensitive = true, .required = false, .required_values = -1,
@@ -36,9 +36,10 @@ static struct console_args_command netstar_arp_network_spoofing_commands[] = {
   { .name = "netstar:arp:network-spoofing:protected-hosts", .flags = "--protected-hosts", .sensitive = true, .required = false, .required_values = 1, },
   { .name = "netstar:arp:network-spoofing:redirection-host", .flags = "--redirection-host", .sensitive = true, .required = false, .required_values = 1, },
   { .name = "netstar:arp:network-spoofing:bidirectional", .flags = "--bidirectional", .sensitive = true, .required = false, },
-  { .name = "netstar:arp:network-spoofing:persistent-time", .flags = "--persistent-time", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:arp:network-spoofing:shockwave-time", .flags = "--shockwave-time", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:arp:network-spoofing:shockwaves", .flags = "--shockwaves", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:arp:network-spoofing:network-scan-interval", .flags = "--network-scan-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:arp:network-spoofing:spoof-steady-interval", .flags = "--spoof-steady-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:arp:network-spoofing:spoof-burst-interval", .flags = "--spoof-burst-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:arp:network-spoofing:spoof-burst-count", .flags = "--spoof-burst-count", .sensitive = true, .required = false, .required_values = 1, },
 };
 static struct console_args_command netstar_arp_network_spoofing_command = {
   .name = "netstar:arp:network-spoofing", .flags = "--network-spoofing", .sensitive = true, .required = false, .required_values = -1,
@@ -48,9 +49,9 @@ static struct console_args_command netstar_arp_network_spoofing_command = {
 static struct console_args_command netstar_arp_spoofing_commands[] = {
   { .name = "netstar:arp:spoofing:redirection-host", .flags = "--redirection-host", .sensitive = true, .required = false, .required_values = 1, },
   { .name = "netstar:arp:spoofing:bidirectional", .flags = "--bidirectional", .sensitive = true, .required = false, },
-  { .name = "netstar:arp:spoofing:persistent-time", .flags = "--persistent-time", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:arp:spoofing:shockwave-time", .flags = "--shockwave-time", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:arp:spoofing:shockwaves", .flags = "--shockwaves", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:arp:spoofing:spoof-steady-interval", .flags = "--spoof-steady-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:arp:spoofing:spoof-burst-interval", .flags = "--spoof-burst-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:arp:spoofing:spoof-burst-count", .flags = "--spoof-burst-count", .sensitive = true, .required = false, .required_values = 1, },
 };
 static struct console_args_command netstar_arp_spoofing_command = {
   .name = "netstar:arp:spoofing", .flags = "--spoofing", .sensitive = true, .required = false, .required_values = -1,
@@ -71,9 +72,10 @@ static struct console_args_command netstar_ndp_network_spoofing_commands[] = {
   { .name = "netstar:ndp:network-spoofing:protected-hosts", .flags = "--protected-hosts", .sensitive = true, .required = false, .required_values = 1, },
   { .name = "netstar:ndp:network-spoofing:redirection-host", .flags = "--redirection-host", .sensitive = true, .required = false, .required_values = 1, },
   { .name = "netstar:ndp:network-spoofing:bidirectional", .flags = "--bidirectional", .sensitive = true, .required = false, },
-  { .name = "netstar:ndp:network-spoofing:persistent-time", .flags = "--persistent-time", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:ndp:network-spoofing:shockwave-time", .flags = "--shockwave-time", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:ndp:network-spoofing:shockwaves", .flags = "--shockwaves", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:ndp:network-spoofing:network-scan-interval", .flags = "--network-scan-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:ndp:network-spoofing:spoof-steady-interval", .flags = "--spoof-steady-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:ndp:network-spoofing:spoof-burst-interval", .flags = "--spoof-burst-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:ndp:network-spoofing:spoof-burst-count", .flags = "--spoof-burst-count", .sensitive = true, .required = false, .required_values = 1, },
 };
 static struct console_args_command netstar_ndp_network_spoofing_command = {
   .name = "netstar:ndp:network-spoofing", .flags = "--network-spoofing", .sensitive = true, .required = false, .required_values = -1,
@@ -82,9 +84,9 @@ static struct console_args_command netstar_ndp_network_spoofing_command = {
 
 static struct console_args_command netstar_ndp_spoofing_commands[] = {
   { .name = "netstar:ndp:spoofing:bidirectional", .flags = "--bidirectional", .sensitive = true, .required = false, },
-  { .name = "netstar:ndp:spoofing:persistent-time", .flags = "--persistent-time", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:ndp:spoofing:shockwave-time", .flags = "--shockwave-time", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:ndp:spoofing:shockwaves", .flags = "--shockwaves", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:ndp:spoofing:spoof-steady-interval", .flags = "--spoof-steady-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:ndp:spoofing:spoof-burst-interval", .flags = "--spoof-burst-interval", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:ndp:spoofing:spoof-burst-count", .flags = "--spoof-burst-count", .sensitive = true, .required = false, .required_values = 1, },
 };
 static struct console_args_command netstar_ndp_spoofing_command = {
   .name = "netstar:ndp:spoofing", .flags = "--spoofing", .sensitive = true, .required = false, .required_values = -1,
@@ -153,11 +155,11 @@ static struct console_args_command netstar_scanner_commands[] = {
   { .name = "netstar:scanner:stealth-scan", .flags = "--stealth-scan", .sensitive = true, .required = false, .required_values = 0, },
   { .name = "netstar:scanner:scan-hosts4-cidr", .flags = "--scan-hosts4-cidr", .sensitive = true, .required = false, .required_values = 1, },
   { .name = "netstar:scanner:scan-hosts4-range", .flags = "--scan-hosts4-range", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:scanner:scan-hosts4-time", .flags = "--scan-hosts4-time", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:scanner:scan-hosts4-interval", .flags = "--scan-hosts4-interval", .sensitive = true, .required = false, .required_values = 1, },
   { .name = "netstar:scanner:scan-hosts4-only", .flags = "--scan-hosts4-only", .sensitive = true, .required = false, .required_values = 0, },
   { .name = "netstar:scanner:scan-hosts6-cidr", .flags = "--scan-hosts6-cidr", .sensitive = true, .required = false, .required_values = 1, },
   { .name = "netstar:scanner:scan-hosts6-range", .flags = "--scan-hosts6-range", .sensitive = true, .required = false, .required_values = 1, },
-  { .name = "netstar:scanner:scan-hosts6-time", .flags = "--scan-hosts6-time", .sensitive = true, .required = false, .required_values = 1, },
+  { .name = "netstar:scanner:scan-hosts6-interval", .flags = "--scan-hosts6-interval", .sensitive = true, .required = false, .required_values = 1, },
   { .name = "netstar:scanner:scan-hosts6-only", .flags = "--scan-hosts6-only", .sensitive = true, .required = false, .required_values = 0, },
   { .name = "netstar:scanner:preexcluded-hosts", .flags = "--preexclude-hosts", .sensitive = true, .required = false, .required_values = 1, },
   { .name = "netstar:scanner:silent", .flags = "--silent", .sensitive = true, .required = false, .required_values = 0, },
@@ -217,11 +219,12 @@ netstar_command_arp_command_help(struct console_args_command *command) {
                    "  netstar arp --broadcast-spoofing [spoofed-hosts] [arguments]\r\n"
                    "\r\n"
                    "Arguments:\r\n"
-                   "  --shockwave-time  time in microseconds between packets during storm-phase attacks (max speed)\r\n"
-                   "  --shockwaves      number of high-speed spoofing attempts during storm phase\r\n"
+                   "  --spoof-burst-interval  time interval in microseconds between packets during storm-phase attacks (max speed)\r\n"
+                   "  --spoof-burst-count     number of high-speed spoofing attempts during storm phase\r\n"
                    "\r\n"
-                   "  --persistent-time stable timeout in milliseconds for periodic spoofing after initial infection\r\n"
-                   "\r\n");
+                   "  --spoof-steady-interval stable time interval in milliseconds for periodic spoofing after initial infection\r\n"
+                   "\r\n"
+    );
   } else if (string_equals(command->values[1], "--network-spoofing", true) || string_equals(command->values[1], "network-spoofing", true)) {
     netstar_printf("Usage:\r\n"
                    "\r\n"
@@ -229,34 +232,38 @@ netstar_command_arp_command_help(struct console_args_command *command) {
                    "\r\n"
                    "Arguments:\r\n"
                    "\r\n"
-                   "  --bidirectional    enable two-way ARP spoofing between victims and targets\r\n"
+                   "  --network-scan-interval time interval to wait for hosts to be discovered on the network\r\n"
                    "\r\n"
-                   "  --redirection-host redirect spoofed traffic to an alternate IPv4 host for load balancing and stealth\r\n"
+                   "  --spoof-burst-interval  time interval in minutes/seconds/microseconds between packets during shockwave-phase attacks\r\n"
+                   "  --spoof-burst-count     number of high-speed spoofing attempts during storm phase\r\n"
                    "\r\n"
-                   "  --protected-hosts  list of IPv4 hosts to be protected from ARP spoofing attacks\r\n"
+                   "  --spoof-steady-interval stable time interval in minutes/seconds/microseconds for periodic spoofing\r\n"
                    "\r\n"
-                   "  --shockwave-time   time in minutes/seconds/microseconds between packets during shockwave-phase attacks\r\n"
-                   "  --shockwaves       number of high-speed spoofing attempts during storm phase\r\n"
+                   "  --bidirectional         bidirectional ARP spoofing between victims and targets\r\n"
                    "\r\n"
-                   "  --persistent-time  persistent time in minutes/seconds/microseconds for periodic spoofing\r\n"
-                   "\r\n");
+                   "  --redirection-host      redirect spoofed traffic to an alternate IPv4 host for load balancing and stealth\r\n"
+                   "\r\n"
+                   "  --protected-hosts       list of IPv4 hosts to be protected from ARP spoofing attacks\r\n"
+                   "\r\n"
+    );
   } else if (string_equals(command->values[1], "--spoofing", true) || string_equals(command->values[1], "spoofing", true)) {
     netstar_printf("Usage:\r\n\r\n"
                    "  netstar arp --spoofing [spoofed-hosts] [target-hosts] [arguments]\r\n"
                    "\r\n"
                    "Arguments:\r\n"
                    "\r\n"
-                   "  --bidirectional    enable two-way ARP spoofing between victims and targets\r\n"
+                   "  --spoof-burst-interval  time interval in minutes/seconds/microseconds between packets during shockwave-phase attacks\r\n"
+                   "  --spoof-burst-count     number of high-speed spoofing attempts during storm phase\r\n"
                    "\r\n"
-                   "  --redirection-host redirect spoofed traffic to an alternate IPv4 host for load balancing and stealth\r\n"
+                   "  --spoof-steady-interval stable time interval in minutes/seconds/microseconds for periodic spoofing\r\n"
                    "\r\n"
-                   "  --protected-hosts  list of IPv4 hosts to be protected from ARP spoofing attacks\r\n"
+                   "  --bidirectional         bidirectional ARP spoofing between victims and targets\r\n"
                    "\r\n"
-                   "  --shockwave-time   time in minutes/seconds/microseconds between packets during shockwave-phase attacks\r\n"
-                   "  --shockwaves       number of high-speed spoofing attempts during storm phase\r\n"
+                   "  --redirection-host      redirect spoofed traffic to an alternate IPv4 host for load balancing and stealth\r\n"
                    "\r\n"
-                   "  --persistent-time  persistent time in minutes/seconds/microseconds for periodic spoofing\r\n"
-                   "\r\n");
+                   "  --protected-hosts       list of IPv4 hosts to be protected from ARP spoofing attacks\r\n"
+                   "\r\n"
+    );
   } else {
     netstar_printf("Unknown help arp command \"%s\". Use \"netstar help arp\".\r\n", command->values[1]);
   }
@@ -271,34 +278,38 @@ netstar_command_ndp_command_help(struct console_args_command *command) {
                    "\r\n"
                    "Arguments:\r\n"
                    "\r\n"
-                   "  --bidirectional    enable two-way ndp spoofing between victims and targets\r\n"
+                   "  --network-scan-interval time interval to wait for hosts to be discovered on the network\r\n"
                    "\r\n"
-                   "  --redirection-host redirect spoofed traffic to an alternate IPv6 host for load balancing and stealth\r\n"
+                   "  --spoof-burst-interval  time interval in minutes/seconds/microseconds between packets during shockwave-phase attacks\r\n"
+                   "  --spoof-burst-count     number of high-speed spoofing attempts during storm phase\r\n"
                    "\r\n"
-                   "  --protected-hosts  list of IPv6 hosts to be protected from ndp spoofing attacks\r\n"
+                   "  --spoof-steady-interval stable time interval in minutes/seconds/microseconds for periodic spoofing\r\n"
                    "\r\n"
-                   "  --shockwave-time   time in minutes/seconds/microseconds between packets during shockwave-phase attacks\r\n"
-                   "  --shockwaves       number of high-speed spoofing attempts during storm phase\r\n"
+                   "  --bidirectional         bidirectional NDP spoofing between victims and targets\r\n"
                    "\r\n"
-                   "  --persistent-time  persistent time in minutes/seconds/microseconds for periodic spoofing\r\n"
-                   "\r\n");
+                   "  --redirection-host      redirect spoofed traffic to an alternate IPv6 host for load balancing and stealth\r\n"
+                   "\r\n"
+                   "  --protected-hosts       list of IPv6 hosts to be protected from ndp spoofing attacks\r\n"
+                   "\r\n"
+    );
   } else if (string_equals(command->values[1], "--spoofing", true) || string_equals(command->values[1], "spoofing", true)) {
     netstar_printf("Usage:\r\n\r\n"
                    "  netstar ndp --spoofing [spoofed-hosts] [target-hosts] [arguments]\r\n"
                    "\r\n"
                    "Arguments:\r\n"
                    "\r\n"
-                   "  --bidirectional    enable two-way ndp spoofing between victims and targets\r\n"
+                   "  --spoof-burst-interval  time interval in minutes/seconds/microseconds between packets during shockwave-phase attacks\r\n"
+                   "  --spoof-burst-count     number of high-speed spoofing attempts during storm phase\r\n"
                    "\r\n"
-                   "  --redirection-host redirect spoofed traffic to an alternate IPv6 host for load balancing and stealth\r\n"
+                   "  --spoof-steady-interval stable time interval in minutes/seconds/microseconds for periodic spoofing\r\n"
                    "\r\n"
-                   "  --protected-hosts  list of IPv6 hosts to be protected from ndp spoofing attacks\r\n"
+                   "  --bidirectional         bidirectional NDP spoofing between victims and targets\r\n"
                    "\r\n"
-                   "  --shockwave-time   time in minutes/seconds/microseconds between packets during shockwave-phase attacks\r\n"
-                   "  --shockwaves       number of high-speed spoofing attempts during storm phase\r\n"
+                   "  --redirection-host      redirect spoofed traffic to an alternate IPv6 host for load balancing and stealth\r\n"
                    "\r\n"
-                   "  --persistent-time  persistent time in minutes/seconds/microseconds for periodic spoofing\r\n"
-                   "\r\n");
+                   "  --protected-hosts       list of IPv6 hosts to be protected from ndp spoofing attacks\r\n"
+                   "\r\n"
+    );
   } else {
     netstar_printf("Unknown help ndp command \"%s\". Use \"netstar help ndp\".\r\n", command->values[1]);
   }
@@ -337,7 +348,7 @@ netstar_command_help_topic(struct console_args_command *command) {
   if (string_equals(command->value, "arp", true)) {
     if (command->values_count > 1) {
       netstar_command_arp_command_help(command);
-      return;
+      netstar_exit(NETSTAR_EXIT_SUCCESS);
     }
 
     netstar_printf("Usage:\r\n"
@@ -357,7 +368,7 @@ netstar_command_help_topic(struct console_args_command *command) {
   } else if (string_equals(command->value, "ndp", true)) {
     if (command->values_count > 1) {
       netstar_command_ndp_command_help(command);
-      return;
+      netstar_exit(NETSTAR_EXIT_SUCCESS);
     }
 
     netstar_printf("Usage:\r\n"
@@ -373,7 +384,7 @@ netstar_command_help_topic(struct console_args_command *command) {
   } else if (string_equals(command->value, "dns", true)) {
     if (command->values_count > 1) {
       netstar_command_dns_command_help(command);
-      return;
+      netstar_exit(NETSTAR_EXIT_SUCCESS);
     }
 
     netstar_printf("Usage:\r\n"
@@ -382,7 +393,7 @@ netstar_command_help_topic(struct console_args_command *command) {
                    "\r\n"
                    "Commands:\r\n"
                    "\r\n"
-                   "  netstar dns --spoofing [target-hosts]\r\n"
+                   "  netstar dns --spoofing [resource-records]\r\n"
                    "\r\n");
   } else if (string_equals(command->value, "http", true)) {
     netstar_printf("Usage:\r\n"
@@ -396,7 +407,7 @@ netstar_command_help_topic(struct console_args_command *command) {
   } else if (string_equals(command->value, "redirect", true)) {
     if (command->values_count > 1) {
       netstar_command_redirect_command_help(command);
-      return;
+      netstar_exit(NETSTAR_EXIT_SUCCESS);
     }
 
     netstar_printf("Usage:\r\n"
@@ -413,20 +424,20 @@ netstar_command_help_topic(struct console_args_command *command) {
                    "\r\n"
                    "Arguments:\r\n"
                    "\r\n"
-                   "  --stealth-scan       \r\n"
+                   "  --scan-hosts4-cidr     scan active IPv4 hosts on the network from a CIDR annotation\r\n"
+                   "  --scan-hosts4-range    scan IPv4 hosts from a range of addresses\r\n"
+                   "  --scan-hosts4-only     scan only IPv4 hosts on the network\r\n"
+                   "  --scan-hosts4-interval time interval between each scan for IPv4 hosts\r\n"
                    "\r\n"
-                   "  --scan-hosts4-cidr   scan active IPv4 hosts on the network from a CIDR annotation\r\n"
-                   "  --scan-hosts4-range  scan IPv4 hosts from a range of addresses\r\n"
-                   "  --scan-hosts4-only   scan only IPv4 hosts on the network\r\n"
-                   "  --scan-hosts4-time\r\n"
+                   "  --scan-hosts6-cidr     scan active IPv6 hosts on the network from a CIDR annotation\r\n"
+                   "  --scan-hosts6-range    scan IPv6 hosts from a range of addresses\r\n"
+                   "  --scan-hosts6-only     scan only IPv6 hosts on the network\r\n"
+                   "  --scan-hosts6-interval time interval between each scan for IPv6 hosts\r\n"
                    "\r\n"
-                   "  --scan-hosts6-cidr   scan active IPv6 hosts on the network from a CIDR annotation\r\n"
-                   "  --scan-hosts6-range  scan IPv6 hosts from a range of addresses\r\n"
-                   "  --scan-hosts6-only   scan only IPv6 hosts on the network\r\n"
-                   "  --scan-hosts6-time\r\n"
+                   "  --stealth-scan         stealth host discovery based on network traffic only\r\n"
                    "\r\n"
-                   "  --preexclude-hosts   skip a predefined list of IPv4 and IPv6 hosts during scanning\r\n"
-                   "  --silent             silent notifications of discovered hosts\r\n"
+                   "  --preexclude-hosts     skip a predefined list of IPv4 and IPv6 hosts during scanning\r\n"
+                   "  --silent               silent notifications of discovered hosts\r\n"
                    "\r\n");
   } else if (string_equals(command->value, "monitor", true)) {
     netstar_printf("Usage:\r\n\r\n"
@@ -630,17 +641,17 @@ netstar_command_commands_parse(netstar_t *netstar) {
 
 // netstar:scanner
   if (netstar_scanner_command.defined) {
-    struct console_args_command *stealth_scan = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:stealth-scan");
-
     struct console_args_command *scan_hosts4_cidr = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:scan-hosts4-cidr");
     struct console_args_command *scan_hosts4_range = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:scan-hosts4-range");
-    struct console_args_command *scan_hosts4_time = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:scan-hosts4-time");
+    struct console_args_command *scan_hosts4_interval = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:scan-hosts4-interval");
     struct console_args_command *scan_hosts4_only = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:scan-hosts4-only");
 
     struct console_args_command *scan_hosts6_cidr = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:scan-hosts6-cidr");
     struct console_args_command *scan_hosts6_range = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:scan-hosts6-range");
-    struct console_args_command *scan_hosts6_time = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:scan-hosts6-time");
+    struct console_args_command *scan_hosts6_interval = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:scan-hosts6-interval");
     struct console_args_command *scan_hosts6_only = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:scan-hosts6-only");
+
+    struct console_args_command *stealth_scan = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:stealth-scan");
 
     struct console_args_command *preexcluded_hosts = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:preexcluded-hosts");
     struct console_args_command *silent = console_args_command_subcommand(&netstar_scanner_command, "netstar:scanner:silent");
@@ -660,8 +671,8 @@ netstar_command_commands_parse(netstar_t *netstar) {
     if (scan_hosts4_range->defined && (!scan_hosts4_range->initialized || !netstar_utils_args_range4(&scanner->hosts4.range.begin, &scanner->hosts4.range.end, scan_hosts4_range->value)))
       netstar_error("%s: needs at least 2 arguments; begin and end range IPv4 addresses.\r\n", scan_hosts4_range->name);
 
-    if (scan_hosts4_time->defined && (!scan_hosts4_time->initialized || !netstar_utils_args_time(&scanner->hosts4.time, scan_hosts4_time->value)))
-      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", scan_hosts4_time->name);
+    if (scan_hosts4_interval->defined && (!scan_hosts4_interval->initialized || !netstar_utils_args_time(&scanner->hosts4.time_interval, scan_hosts4_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", scan_hosts4_interval->name);
 
     if (scan_hosts4_only->defined)
       scanner->mode = NETSTAR_SCANNER_MODE_HOSTS4;
@@ -672,8 +683,8 @@ netstar_command_commands_parse(netstar_t *netstar) {
     if (scan_hosts6_range->defined && (!scan_hosts6_range->initialized || !netstar_utils_args_range6(&scanner->hosts6.range.begin, &scanner->hosts6.range.end, scan_hosts6_range->value)))
       netstar_error("%s: needs at least 2 arguments; begin and end range IPv6 addresses.\r\n", scan_hosts6_range->name);
 
-    if (scan_hosts6_time->defined && (!scan_hosts6_time->initialized || !netstar_utils_args_time(&scanner->hosts6.time, scan_hosts6_time->value)))
-      netstar_error("%s: needs at least 1 argument; timeout in minutes[m]/seconds[s]/milliseconds[ms].\r\n", scan_hosts6_time->name);
+    if (scan_hosts6_interval->defined && (!scan_hosts6_interval->initialized || !netstar_utils_args_time(&scanner->hosts6.time_interval, scan_hosts6_interval->value)))
+      netstar_error("%s: needs at least 1 argument; timeout in minutes[m]/seconds[s]/milliseconds[ms].\r\n", scan_hosts6_interval->name);
 
     if (scan_hosts6_only->defined)
       scanner->mode = NETSTAR_SCANNER_MODE_HOSTS6;
@@ -753,10 +764,10 @@ netstar_command_commands_parse(netstar_t *netstar) {
     netstar_error("%s: must be accompanied by a subcommand. Use \"netstar help arp\" for more information.\r\n\r\n", netstar_arp_command.name);
 
   if (netstar_arp_broadcast_spoofing_command.defined) {
-    struct console_args_command *persistent_time = console_args_command_subcommand(&netstar_arp_broadcast_spoofing_command, "netstar:arp:broadcast-spoofing:persistent-time");
+    struct console_args_command *spoof_steady_interval = console_args_command_subcommand(&netstar_arp_broadcast_spoofing_command, "netstar:arp:broadcast-spoofing:spoof-steady-interval");
 
-    struct console_args_command *shockwave_time = console_args_command_subcommand(&netstar_arp_broadcast_spoofing_command, "netstar:arp:broadcast-spoofing:shockwave-time");
-    struct console_args_command *shockwaves = console_args_command_subcommand(&netstar_arp_broadcast_spoofing_command, "netstar:arp:broadcast-spoofing:shockwaves");
+    struct console_args_command *spoof_burst_interval = console_args_command_subcommand(&netstar_arp_broadcast_spoofing_command, "netstar:arp:broadcast-spoofing:spoof-burst-interval");
+    struct console_args_command *spoof_burst_count = console_args_command_subcommand(&netstar_arp_broadcast_spoofing_command, "netstar:arp:broadcast-spoofing:spoof-burst-count");
 
     struct netstar_service *service = netstar_service(netstar_arp_broadcast_spoofing_command.name);
     struct netstar_arp_broadcast_spoofing *spoofing_attack = (struct netstar_arp_broadcast_spoofing *)service->context;
@@ -765,31 +776,33 @@ netstar_command_commands_parse(netstar_t *netstar) {
       netstar_critical("%s: syscall-error: %s\r\n", &netstar_arp_broadcast_spoofing_command.name, system_error_reason(system_geterror()));
 
     if (!netstar_arp_broadcast_spoofing_command.initialized || !netstar_utils_args_hosts4(spoofing_attack->spoofed_hosts, netstar_arp_broadcast_spoofing_command.value))
-      netstar_error("%s: needs at least 1 argument; spoofed IPv4 hosts list.\r\n", &netstar_arp_broadcast_spoofing_command.name); // "Use \"netstar help arp\" for more information.\r\n\r\n";
+      netstar_error("%s: needs at least 1 argument; spoofed IPv4 hosts list.\r\n", netstar_arp_broadcast_spoofing_command.name); // "Use \"netstar help arp\" for more information.\r\n\r\n";
 
-    if (shockwave_time->defined && (!shockwave_time->initialized || !netstar_utils_args_time(&spoofing_attack->shockwave_time, shockwave_time->value)))
-      netstar_error("%s: needs at least 1 argument; time in seconds/milliseconds.\r\n", shockwave_time->name);
+    if (spoof_burst_interval->defined && (!spoof_burst_interval->initialized || !netstar_utils_args_time(&spoofing_attack->spoof_burst_interval, spoof_burst_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in seconds/milliseconds.\r\n", spoof_burst_interval->name);
 
-    if (shockwaves->defined && (!shockwaves->initialized || !netstar_utils_args_number((uint64_t *)&spoofing_attack->shockwaves, shockwaves->value)))
-      netstar_error("%s: needs at least 1 argument; unsigned number.\r\n", shockwaves->name);
+    if (spoof_burst_count->defined && (!spoof_burst_count->initialized || !netstar_utils_args_number((uint64_t *)&spoofing_attack->spoof_burst_count, spoof_burst_count->value)))
+      netstar_error("%s: needs at least 1 argument; unsigned number.\r\n", spoof_burst_count->name);
 
-    if (persistent_time->defined && (!persistent_time->initialized || !netstar_utils_args_time(&spoofing_attack->persistent_time, persistent_time->value)))
-      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", persistent_time->name);
+    if (spoof_steady_interval->defined && (!spoof_steady_interval->initialized || !netstar_utils_args_time(&spoofing_attack->spoof_steady_interval, spoof_steady_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", spoof_steady_interval->name);
 
     netstar_service_start(service);
   }
 
 // netstar:arp:network-spoofing
   if (netstar_arp_network_spoofing_command.defined) {
+    struct console_args_command *network_scan_interval = console_args_command_subcommand(&netstar_arp_network_spoofing_command, "netstar:arp:network-spoofing:network-scan-interval");
+
+    struct console_args_command *spoof_steady_interval = console_args_command_subcommand(&netstar_arp_network_spoofing_command, "netstar:arp:network-spoofing:spoof-steady-interval");
+
+    struct console_args_command *spoof_burst_interval = console_args_command_subcommand(&netstar_arp_network_spoofing_command, "netstar:arp:network-spoofing:spoof-burst-interval");
+    struct console_args_command *spoof_burst_count = console_args_command_subcommand(&netstar_arp_network_spoofing_command, "netstar:arp:network-spoofing:spoof-burst-count");
+
     struct console_args_command *redirection_host = console_args_command_subcommand(&netstar_arp_network_spoofing_command, "netstar:arp:network-spoofing:redirection-host");
     struct console_args_command *bidirectional = console_args_command_subcommand(&netstar_arp_network_spoofing_command, "netstar:arp:network-spoofing:bidirectional");
 
     struct console_args_command *protected_hosts = console_args_command_subcommand(&netstar_arp_network_spoofing_command, "netstar:arp:network-spoofing:protected-hosts");
-
-    struct console_args_command *persistent_time = console_args_command_subcommand(&netstar_arp_network_spoofing_command, "netstar:arp:network-spoofing:persistent-time");
-
-    struct console_args_command *shockwave_time = console_args_command_subcommand(&netstar_arp_network_spoofing_command, "netstar:arp:network-spoofing:shockwave-time");
-    struct console_args_command *shockwaves = console_args_command_subcommand(&netstar_arp_network_spoofing_command, "netstar:arp:network-spoofing:shockwaves");
 
     struct netstar_service *service = netstar_service(netstar_arp_network_spoofing_command.name);
     struct netstar_arp_network_spoofing *spoofing_attack = (struct netstar_arp_network_spoofing *)service->context;
@@ -810,14 +823,17 @@ netstar_command_commands_parse(netstar_t *netstar) {
 
     spoofing_attack->bidirectional = bidirectional->defined;
 
-    if (shockwave_time->defined && (!shockwave_time->initialized || !netstar_utils_args_time(&spoofing_attack->shockwave_time, shockwave_time->value)))
-      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", shockwave_time->name);
+    if (network_scan_interval->defined && (!network_scan_interval->initialized || !netstar_utils_args_time(&spoofing_attack->network_scan_interval, network_scan_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", network_scan_interval->name);
 
-    if (shockwaves->defined && (!shockwaves->initialized || !netstar_utils_args_number((uint64_t *)&spoofing_attack->shockwaves, shockwaves->value)))
-      netstar_error("%s: needs at least 1 argument; unsigned number.\r\n", shockwaves->name);
+    if (spoof_burst_interval->defined && (!spoof_burst_interval->initialized || !netstar_utils_args_time(&spoofing_attack->spoof_burst_interval, spoof_burst_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", spoof_burst_interval->name);
 
-    if (persistent_time->defined && (!persistent_time->initialized || !netstar_utils_args_time(&spoofing_attack->persistent_time, persistent_time->value)))
-      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", persistent_time->name);
+    if (spoof_burst_count->defined && (!spoof_burst_count->initialized || !netstar_utils_args_number((uint64_t *)&spoofing_attack->spoof_burst_count, spoof_burst_count->value)))
+      netstar_error("%s: needs at least 1 argument; unsigned number.\r\n", spoof_burst_count->name);
+
+    if (spoof_steady_interval->defined && (!spoof_steady_interval->initialized || !netstar_utils_args_time(&spoofing_attack->spoof_steady_interval, spoof_steady_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", spoof_steady_interval->name);
 
     netstar_service_start(service);
   }
@@ -826,10 +842,10 @@ netstar_command_commands_parse(netstar_t *netstar) {
     struct console_args_command *redirection_host = console_args_command_subcommand(&netstar_arp_spoofing_command, "netstar:arp:spoofing:redirection-hosts");
     struct console_args_command *bidirectional = console_args_command_subcommand(&netstar_arp_spoofing_command, "netstar:arp:spoofing:bidirectional");
 
-    struct console_args_command *persistent_time = console_args_command_subcommand(&netstar_arp_spoofing_command, "netstar:arp:spoofing:persistent-time");
+    struct console_args_command *spoof_steady_interval = console_args_command_subcommand(&netstar_arp_spoofing_command, "netstar:arp:spoofing:spoof-steady-interval");
 
-    struct console_args_command *shockwave_time = console_args_command_subcommand(&netstar_arp_spoofing_command, "netstar:arp:spoofing:shockwave-time");
-    struct console_args_command *shockwaves = console_args_command_subcommand(&netstar_arp_spoofing_command, "netstar:arp:spoofing:shockwaves");
+    struct console_args_command *spoof_burst_interval = console_args_command_subcommand(&netstar_arp_spoofing_command, "netstar:arp:spoofing:spoof-burst-interval");
+    struct console_args_command *spoof_burst_count = console_args_command_subcommand(&netstar_arp_spoofing_command, "netstar:arp:spoofing:spoof-burst-count");
 
     struct netstar_service *service = netstar_service(netstar_arp_spoofing_command.name);
     struct netstar_arp_spoofing *spoofing_attack = (struct netstar_arp_spoofing *)service->context;
@@ -850,14 +866,14 @@ netstar_command_commands_parse(netstar_t *netstar) {
 
     spoofing_attack->bidirectional = bidirectional->defined;
 
-    if (shockwave_time->defined && (!shockwave_time->initialized || !netstar_utils_args_time(&spoofing_attack->shockwave_time, *shockwave_time->values)))
-      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", shockwave_time->name);
+    if (spoof_burst_interval->defined && (!spoof_burst_interval->initialized || !netstar_utils_args_time(&spoofing_attack->spoof_burst_interval, spoof_burst_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", spoof_burst_interval->name);
 
-    if (shockwaves->defined && (!shockwaves->initialized || !netstar_utils_args_number((uint64_t *)&spoofing_attack->shockwaves, *shockwaves->values)))
-      netstar_error("%s: needs at least 1 argument; unsigned number.\r\n", shockwaves->name);
+    if (spoof_burst_count->defined && (!spoof_burst_count->initialized || !netstar_utils_args_number((uint64_t *)&spoofing_attack->spoof_burst_count, spoof_burst_count->value)))
+      netstar_error("%s: needs at least 1 argument; unsigned number.\r\n", spoof_burst_count->name);
 
-    if (persistent_time->defined && (!persistent_time->initialized || !netstar_utils_args_time(&spoofing_attack->persistent_time, *persistent_time->values)))
-      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", persistent_time->name);
+    if (spoof_steady_interval->defined && (!spoof_steady_interval->initialized || !netstar_utils_args_time(&spoofing_attack->spoof_steady_interval, spoof_steady_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", spoof_steady_interval->name);
 
     netstar_service_start(service);
   }
@@ -868,15 +884,17 @@ netstar_command_commands_parse(netstar_t *netstar) {
 
 // netstar:ndp:network-spoofing
   if (netstar_ndp_network_spoofing_command.defined) {
+    struct console_args_command *network_scan_interval = console_args_command_subcommand(&netstar_ndp_network_spoofing_command, "netstar:ndp:network-spoofing:network-scan-interval");
+
+    struct console_args_command *spoof_steady_interval = console_args_command_subcommand(&netstar_ndp_network_spoofing_command, "netstar:ndp:network-spoofing:spoof-steady-interval");
+
+    struct console_args_command *spoof_burst_interval = console_args_command_subcommand(&netstar_ndp_network_spoofing_command, "netstar:ndp:network-spoofing:spoof-burst-interval");
+    struct console_args_command *spoof_burst_count = console_args_command_subcommand(&netstar_ndp_network_spoofing_command, "netstar:ndp:network-spoofing:spoof-burst-count");
+
     struct console_args_command *redirection_host = console_args_command_subcommand(&netstar_ndp_network_spoofing_command, "netstar:ndp:network-spoofing:redirection-host");
     struct console_args_command *bidirectional = console_args_command_subcommand(&netstar_ndp_network_spoofing_command, "netstar:ndp:network-spoofing:bidirectional");
 
     struct console_args_command *protected_hosts = console_args_command_subcommand(&netstar_ndp_network_spoofing_command, "netstar:ndp:network-spoofing:protected-hosts");
-
-    struct console_args_command *persistent_time = console_args_command_subcommand(&netstar_ndp_network_spoofing_command, "netstar:ndp:network-spoofing:persistent-time");
-
-    struct console_args_command *shockwave_time = console_args_command_subcommand(&netstar_ndp_network_spoofing_command, "netstar:ndp:network-spoofing:shockwave-time");
-    struct console_args_command *shockwaves = console_args_command_subcommand(&netstar_ndp_network_spoofing_command, "netstar:ndp:network-spoofing:shockwaves");
 
     struct netstar_service *service = netstar_service(netstar_ndp_network_spoofing_command.name);
     struct netstar_ndp_network_spoofing *spoofing_attack = (struct netstar_ndp_network_spoofing *)service->context;
@@ -886,6 +904,18 @@ netstar_command_commands_parse(netstar_t *netstar) {
 
     if (!netstar_ndp_network_spoofing_command.initialized || !netstar_utils_args_hosts6(spoofing_attack->spoofed_hosts, netstar_ndp_network_spoofing_command.value))
       netstar_error("%s: needs at least 1 argument; spoofed IPv6 hosts list.\r\n", netstar_ndp_network_spoofing_command.name);
+
+    if (network_scan_interval->defined && (!network_scan_interval->initialized || !netstar_utils_args_time(&spoofing_attack->network_scan_interval, network_scan_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", spoof_burst_interval->name);
+
+    if (spoof_burst_interval->defined && (!spoof_burst_interval->initialized || !netstar_utils_args_time(&spoofing_attack->spoof_burst_interval, spoof_burst_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", spoof_burst_interval->name);
+
+    if (spoof_burst_count->defined && (!spoof_burst_count->initialized || !netstar_utils_args_number((uint64_t *)&spoofing_attack->spoof_burst_count, spoof_burst_count->value)))
+      netstar_error("%s: needs at least 1 argument; unsigned number.\r\n", spoof_burst_count->name);
+
+    if (spoof_steady_interval->defined && (!spoof_steady_interval->initialized || !netstar_utils_args_time(&spoofing_attack->spoof_steady_interval, spoof_steady_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", spoof_steady_interval->name);
 
     if (protected_hosts->defined && !netstar_utils_args_hosts6(spoofing_attack->protected_hosts, protected_hosts->value))
       netstar_error("%s: needs at least 1 argument; protected IPv6 hosts list.\r\n", protected_hosts->name);
@@ -897,25 +927,16 @@ netstar_command_commands_parse(netstar_t *netstar) {
 
     spoofing_attack->bidirectional = bidirectional->defined;
 
-    if (shockwave_time->defined && (!shockwave_time->initialized || !netstar_utils_args_time(&spoofing_attack->shockwave_time, *shockwave_time->values)))
-      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", shockwave_time->name);
-
-    if (shockwaves->defined && (!shockwaves->initialized || !netstar_utils_args_number((uint64_t *)&spoofing_attack->shockwaves, *shockwaves->values)))
-      netstar_error("%s: needs at least 1 argument; unsigned number.\r\n", shockwaves->name);
-
-    if (persistent_time->defined && (!persistent_time->initialized || !netstar_utils_args_time(&spoofing_attack->persistent_time, *persistent_time->values)))
-      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", persistent_time->name);
- 
     netstar_service_start(service);
   }
 // netstar:ndp:spoofing
   if (netstar_ndp_spoofing_command.defined) {
+    struct console_args_command *spoof_steady_interval = console_args_command_subcommand(&netstar_ndp_spoofing_command, "netstar:ndp:spoofing:spoof-steady-interval");
+
+    struct console_args_command *spoof_burst_interval = console_args_command_subcommand(&netstar_ndp_spoofing_command, "netstar:ndp:spoofing:spoof-burst-interval");
+    struct console_args_command *spoof_burst_count = console_args_command_subcommand(&netstar_ndp_spoofing_command, "netstar:ndp:spoofing:spoof-burst-count");
+
     struct console_args_command *bidirectional = console_args_command_subcommand(&netstar_ndp_spoofing_command, "netstar:ndp:spoofing:bidirectional");
-
-    struct console_args_command *persistent_time = console_args_command_subcommand(&netstar_ndp_spoofing_command, "netstar:ndp:spoofing:persistent-time");
-
-    struct console_args_command *shockwave_time = console_args_command_subcommand(&netstar_ndp_spoofing_command, "netstar:ndp:spoofing:shockwave-time");
-    struct console_args_command *shockwaves = console_args_command_subcommand(&netstar_ndp_spoofing_command, "netstar:ndp:spoofing:shockwaves");
 
     struct netstar_service *service = netstar_service(netstar_ndp_spoofing_command.name);
     struct netstar_ndp_spoofing *spoofing_attack = (struct netstar_ndp_spoofing *)service->context;
@@ -929,17 +950,17 @@ netstar_command_commands_parse(netstar_t *netstar) {
     )
       netstar_error("%s: needs at least 2 arguments; spoofed and target IPv6 hosts list.\r\n", netstar_ndp_spoofing_command.name);
 
+    if (spoof_steady_interval->defined && (!spoof_steady_interval->initialized || !netstar_utils_args_time(&spoofing_attack->spoof_steady_interval, spoof_steady_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", spoof_steady_interval->name);
+ 
+    if (spoof_burst_interval->defined && (!spoof_burst_interval->initialized || !netstar_utils_args_time(&spoofing_attack->spoof_burst_interval, spoof_burst_interval->value)))
+      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", spoof_burst_interval->name);
+
+    if (spoof_burst_count->defined && (!spoof_burst_count->initialized || !netstar_utils_args_number((uint64_t *)&spoofing_attack->spoof_burst_count, spoof_burst_count->value)))
+      netstar_error("%s: needs at least 1 argument; unsigned number.\r\n", spoof_burst_count->name);
+
     spoofing_attack->bidirectional = bidirectional->defined;
 
-    if (shockwave_time->defined && (!shockwave_time->initialized || !netstar_utils_args_time(&spoofing_attack->shockwave_time, shockwave_time->value)))
-      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", shockwave_time->name);
-
-    if (shockwaves->defined && (!shockwaves->initialized || !netstar_utils_args_number((uint64_t *)&spoofing_attack->shockwaves, shockwaves->value)))
-      netstar_error("%s: needs at least 1 argument; unsigned number.\r\n", shockwaves->name);
-
-    if (persistent_time->defined && (!persistent_time->initialized || !netstar_utils_args_time(&spoofing_attack->persistent_time, persistent_time->value)))
-      netstar_error("%s: needs at least 1 argument; time in minutes[m]/seconds[s]/milliseconds[ms].\r\n", persistent_time->name);
- 
     netstar_service_start(service);
   }
 

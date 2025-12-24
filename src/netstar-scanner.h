@@ -24,12 +24,12 @@ struct netstar_scanner {
 
   struct {
     netstar_network_ipaddr4_range_t range;
-    netstar_time_t time;
+    netstar_time_t time_interval;
   } hosts4;
 
   struct {
     netstar_network_ipaddr6_range_t range;
-    netstar_time_t time;
+    netstar_time_t time_interval;
   } hosts6;
 
   bool silent;

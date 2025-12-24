@@ -16,10 +16,10 @@ extern "C" {
 struct netstar_arp_broadcast_spoofing {
   netstar_hosts_t spoofed_hosts;
 
-  netstar_time_t shockwave_time;
-  size_t shockwaves;
+  netstar_time_t spoof_burst_interval;
+  size_t spoof_burst_count;
 
-  netstar_time_t persistent_time;
+  netstar_time_t spoof_steady_interval;
 
   netstar_thread_t *thread;
 
@@ -32,18 +32,19 @@ extern void netstar_arp_broadcast_spoofing_free(struct netstar_arp_broadcast_spo
 
 
 struct netstar_arp_network_spoofing {
-  netstar_host_t redirection_host;
-  bool redirective;
-
-  netstar_hosts_t protected_hosts,
-                  spoofed_hosts;
+  netstar_hosts_t protected_hosts, spoofed_hosts;
 
   bool bidirectional;
 
-  netstar_time_t shockwave_time;
-  size_t shockwaves;
+  netstar_host_t redirection_host;
+  bool redirective;
 
-  netstar_time_t persistent_time;
+  netstar_time_t network_scan_interval;
+
+  netstar_time_t spoof_burst_interval;
+  size_t spoof_burst_count;
+
+  netstar_time_t spoof_steady_interval;
 
   bool request;
 
@@ -58,18 +59,17 @@ extern void netstar_arp_network_spoofing_free(struct netstar_arp_network_spoofin
 
 
 struct netstar_arp_spoofing {
-  netstar_host_t redirection_host;
-  bool redirective;
-
-  netstar_hosts_t spoofed_hosts,
-                  target_hosts;
+  netstar_hosts_t spoofed_hosts, target_hosts;
 
   bool bidirectional;
 
-  netstar_time_t shockwave_time;
-  size_t shockwaves;
+  netstar_host_t redirection_host;
+  bool redirective;
 
-  netstar_time_t persistent_time;
+  netstar_time_t spoof_burst_interval;
+  size_t spoof_burst_count;
+
+  netstar_time_t spoof_steady_interval;
 
   bool request;
 
