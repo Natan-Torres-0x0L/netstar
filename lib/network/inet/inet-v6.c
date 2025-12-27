@@ -235,18 +235,20 @@ inetv6_cidr(const char *cidr, uint8_t *prefix_length, struct inetv6 *network, st
 
   if (sscanf(cidr, "%46[^/]/%" SCNu8, string, &prefix) != 2)
     return -1;
+  if (prefix > 128)
+    return -1;
 
   if (inetv6_parse(&addr, string) == -1)
     return -1;
+
+  if (prefix_length)
+    *prefix_length = prefix;
 
   for (size = 0; size < INETV6_SIZE; size++)
     if (prefix >= 8)
       netmasku8[size] = 0xFF, prefix -= 8;
     else if (prefix > 0)
       netmasku8[size] = (uint8_t)(0xFF << (8 - prefix)), prefix = 0;
-
-  if (prefix_length)
-    *prefix_length = prefix;
 
   if (netmask)
     memcpy(netmask, netmasku8, INETV6_SIZE);

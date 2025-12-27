@@ -119,18 +119,22 @@ inetv4_compare(const struct inetv4 *network1, const struct inetv4 *network2) {
 
 int
 inetv4_cidr(const char *cidr, uint8_t *prefix_length, struct inetv4 *network, struct inetv4 *netmask) {
+  uint32_t netmasku32 = INETV4_UALL;
   struct inetv4 addr = {0};
-  uint32_t netmasku32;
 
-  uint8_t prefix;
+  uint8_t prefix = 0;
 
   if (sscanf(cidr, "%" SCNu8 ".%" SCNu8 ".%" SCNu8 ".%" SCNu8 "/%" SCNu8, &addr.u8[0], &addr.u8[1], &addr.u8[2], &addr.u8[3], &prefix) != 5)
     return -1;
 
-  netmasku32 = (0xFFFFFFFF << (32-prefix)) & 0xFFFFFFFF;
+  if (prefix > 32)
+    return -1;
 
   if (prefix_length)
     *prefix_length = prefix;
+
+  if (prefix)
+    netmasku32 = htonl((0xFFFFFFFF << (32-prefix)) & 0xFFFFFFFF);
 
   if (netmask)
     netmask->u32 = netmasku32;

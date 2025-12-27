@@ -705,36 +705,33 @@ netstar_utils_ranges_ipaddr4(const network_ipaddr4_t *network, uint8_t prefix, n
 
 void
 netstar_utils_ranges_ipaddr6(const network_ipaddr6_t *network, uint8_t prefix, network_ipaddr6_t *begin, network_ipaddr6_t *end) {
-  uint8_t complete_bytes = prefix / 8;
+  uint8_t byte, full_bytes, remaining_bits;
 
-  if (complete_bytes < 16) {
-    uint8_t remaining_bits = prefix % 8, byte;
+  if (prefix == 128) {
+    memcpy(begin->u8, network->u8, NETWORK_IPADDR6_SIZE);
+    memcpy(end->u8, network->u8, NETWORK_IPADDR6_SIZE);
 
-    memcpy(begin, network, NETWORK_IPADDR6_SIZE);
-    memcpy(end, network, NETWORK_IPADDR6_SIZE);
+    return;
+  }
 
-    if (remaining_bits) {
-      begin->u8[complete_bytes] &= (0xFF << (8 - remaining_bits));
+  full_bytes = prefix / 8;
+  remaining_bits = prefix % 8;
 
-      for (byte = complete_bytes+1; byte < NETWORK_IPADDR6_SIZE; byte++)
-        begin->u8[byte] = 0x00;
-    } else {
-      for (byte = complete_bytes; byte < NETWORK_IPADDR6_SIZE; byte++)
-        begin->u8[byte] = 0x00;
-    }
+  memcpy(begin->u8, network->u8, NETWORK_IPADDR6_SIZE);
+  memcpy(end->u8, network->u8, NETWORK_IPADDR6_SIZE);
 
-    if (remaining_bits) {
-      end->u8[complete_bytes] |= (1 << (8 - remaining_bits))-1;
+  for (byte = full_bytes + (remaining_bits ? 1 : 0); byte < NETWORK_IPADDR6_SIZE; byte++) {
+    begin->u8[byte] = 0x00;
+    end->u8[byte] = 0xFF;
+  }
 
-      for (byte = complete_bytes+1; byte < NETWORK_IPADDR6_SIZE; byte++)
-        end->u8[byte] = 0xFF;
-    } else {
-      for (byte = complete_bytes+1; byte < NETWORK_IPADDR6_SIZE; byte++)
-        end->u8[byte] = 0xFF;
-    }
+  if (remaining_bits) {
+    uint8_t mask = (uint8_t)(0xFF << (8 - remaining_bits));
+
+    begin->u8[full_bytes] &= mask;
+    end->u8[full_bytes]   |= (uint8_t)(~mask);
   }
 }
-
 
 #ifdef NETSTAR_EXTENDED
 //
