@@ -58,7 +58,6 @@ extern void netstar_thread_routine(netstar_thread_routine_t, void *);
 
 extern netstar_thread_t *netstar_thread_self(void);
 
-extern void netstar_thread_sleep(netstar_thread_t *, netstar_time_t);
 extern void netstar_thread_join(netstar_thread_t *, void **);
 
 extern void netstar_thread_exit(netstar_thread_t *, void *);
