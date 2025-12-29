@@ -92,12 +92,12 @@ netstar_capture_packet_build_arp(struct netstar_capture_packet *packet, uint8_t 
       packet->type |= NETSTAR_FORWARD_ARP_REPLY;
       break;
   }
+  packet->layer |= NETSTAR_FORWARD_LAYER3;
 
   memcpy(&packet->layer3.saddr, &arph->saddr, NETWORK_IPADDR4_SIZE);
   memcpy(&packet->layer3.daddr, &arph->daddr, NETWORK_IPADDR4_SIZE);
 
   packet->layer3.ptr = (void *)arph;
-// packet->layer    |= NETSTAR_CAPTURE_PACKET_LAYER2;
 }
 
 static void
