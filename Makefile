@@ -307,7 +307,6 @@ $(call netstar_build_sources,$(SRC)/netstar-hosts.c)
 $(call netstar_build_sources,$(SRC)/netstar-capture.c)
 $(call netstar_build_sources,$(SRC)/netstar-forward.c)
 
-$(call netstar_build_sources,$(SRC)/netstar-semaphore.c)
 $(call netstar_build_sources,$(SRC)/netstar-threads.c)
 
 $(call netstar_build_sources,$(SRC)/netstar-packet.c)
@@ -342,31 +341,19 @@ NETSTAR_SOURCES_OBJECTS += $(foreach src,$(SOURCES),    \
                              $(if $(filter %.c,$(src)), \
                                $(call netstar_build_source_object,$(src))))
 
-ifdef NETSTAR_EXTENDED
-include ${SRC}/netstar-extended/Makefile
-
-# @ netstar-build-compile-release
-$(RELEASE): $(NETSTAR_EXTENDED_MODULES) $(NETSTAR_SOURCES_OBJECTS)
-	$(CC) $(CVERSION) $(LDFLAGS) $(CFLAGS) -MMD -MP -o $@ $^ $(LDLIBS)
-  # $(STRIP) $(RELEASE) -S --strip-unneeded # $(STRIPFLAGS)
-
-$(call netstar_build_compile_modules)
-
-else
 # @ netstar-build-compile-release
 $(RELEASE): $(NETSTAR_SOURCES_OBJECTS)
 	$(call netstar_build_make_directory,$(RELEASE))
 	$(CC) $(CVERSION) $(LDFLAGS) $(CFLAGS) -MMD -MP -o $@ $^ $(LDLIBS)
   # $(STRIP) $(RELEASE) -S --strip-unneeded # $(STRIPFLAGS)
-endif
 
 # @ netstar-build-sources
 -include $(NETSTAR_SOURCES_DEPENDECIES)
 
 define netstar_build_make_directory
-	$(if $(filter windows,$(SYSTEM)), \
-		@mkdir $(dir $(1)),             \
-		@mkdir -p $(dir $(1)))
+$(if $(filter $(SYSTEM),windows), \
+  @cmd /C if not exist "$(subst,/,\,$(dir $(1)))" mkdir "$(subst,/,\,$(dir $(1)))", \
+  @mkdir -p $(dir $(1)))
 endef
 
 define netstar_build_compile_object
