@@ -140,9 +140,9 @@ static struct console_args_command netstar_redirect_command = {
 };
 
 static struct console_args_command netstar_monitor_commands[] = {
-  { .name = "netstar:monitor:layer2", .flags = "--layer2", .sensitive = true, .required = false, .required_values = 0, },
-  { .name = "netstar:monitor:layer3", .flags = "--layer3", .sensitive = true, .required = false, .required_values = 0, },
-  { .name = "netstar:monitor:layer4", .flags = "--layer4", .sensitive = true, .required = false, .required_values = 0, },
+  { .name = "netstar:monitor:link-layer", .flags = "--link-layer", .sensitive = true, .required = false, .required_values = 0, },
+  { .name = "netstar:monitor:network-layer", .flags = "--network-layer", .sensitive = true, .required = false, .required_values = 0, },
+  { .name = "netstar:monitor:transport-layer", .flags = "--transport-layer", .sensitive = true, .required = false, .required_values = 0, },
   { .name = "netstar:monitor:payload", .flags = "--payload", .sensitive = true, .required = false, .required_values = 1, },
   { .name = "netstar:monitor:filter", .flags = "--filter", .sensitive = true, .required = false, .required_values = 1, },
 };
@@ -441,7 +441,15 @@ netstar_command_help_topic(struct console_args_command *command) {
                    "\r\n");
   } else if (string_equals(command->value, "monitor", true)) {
     netstar_printf("Usage:\r\n\r\n"
-                   "  netstar monitor [--filter] \"[[filter]\"]\r\n"
+                   "  netstar monitor [argumente]\r\n"
+                   "\r\n"
+                   "Arguments:\r\n"
+                   "\r\n"
+                   "  --link-layer      monitor traffic at the link layer\r\n"
+                   "  --network-layer   monitor traffic at the network layer\r\n"
+                   "  --transport-layer monitor traffic at the transport layer\r\n"
+                   "\r\n"
+                   "  --filter          monitor network traffic specified by filter capture\r\n"
                    "\r\n"
                    "Filter syntax:\r\n\r\n"
                    "  [register] [operator==|operator!=] [constant] [operator&&|operator||] ...\r\n"
@@ -723,9 +731,9 @@ netstar_command_commands_parse(netstar_t *netstar) {
 // netstar:monitor
   if (netstar_monitor_command.defined) {
     struct console_args_command *payload = console_args_command_subcommand(&netstar_monitor_command, "netstar:monitor:payload");
-    struct console_args_command *layer2 = console_args_command_subcommand(&netstar_monitor_command, "netstar:monitor:layer2");
-    struct console_args_command *layer3 = console_args_command_subcommand(&netstar_monitor_command, "netstar:monitor:layer3");
-    struct console_args_command *layer4 = console_args_command_subcommand(&netstar_monitor_command, "netstar:monitor:layer4");
+    struct console_args_command *layer2 = console_args_command_subcommand(&netstar_monitor_command, "netstar:monitor:link-layer");
+    struct console_args_command *layer3 = console_args_command_subcommand(&netstar_monitor_command, "netstar:monitor:network-layer");
+    struct console_args_command *layer4 = console_args_command_subcommand(&netstar_monitor_command, "netstar:monitor:transport-layer");
 
     struct console_args_command *filter = console_args_command_subcommand(&netstar_monitor_command, "netstar:monitor:filter");
 
